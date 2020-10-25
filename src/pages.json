@@ -4,7 +4,10 @@
 			"path": "pages/index/main"
 		},
 		{
-			"path": "pages/classify/main"
+			"path": "pages/category/main",
+			"style":{
+				"navigationBarTitleText":"商品分类"
+			}
 		},
 		{
 			"path": "pages/cart/main"
@@ -29,7 +32,7 @@
       "iconPath":"static/tabs/index.png",
       "selectedIconPath":"static/tabs/index_selected.png"
     }, {
-      "pagePath": "pages/classify/main",
+      "pagePath": "pages/category/main",
       "text": "分类",
       "iconPath":"static/tabs/category.png",
       "selectedIconPath":"static/tabs/category_selected.png"
