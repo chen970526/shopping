@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="index">
     <searchBox> <icon type="search" size="14" color="#ccc" />搜索 </searchBox>
     <view class="swiper">
       <swiper :indicator-dots="true" :circular="true" :autoplay="true">
@@ -99,6 +99,9 @@ export default {
 </script>
 
 <style lang='less'>
+.index {
+  padding-bottom: 30rxp;
+}
 swiper {
   height: 340rpx;
 
@@ -130,8 +133,9 @@ swiper {
       }
     }
     .floor_item {
+      height: 386rpx;
+
       .floor_item_image {
-        // height: 386rpx;
         width: 100%;
         float: left;
         padding: 10rpx 0 10rpx 12rpx;
