@@ -64,34 +64,21 @@ export default {
     this.getfloorList()
   },
   methods: {
-    getswiperdata() {
-      uni.request({
-        url: 'https://api-hmugo-web.itheima.net/api/public/v1/home/swiperdata',
-        success: (res) => {
-          // console.log(res.data)
-          this.swiperdata = res.data.message;
-        }
-      });
+    async getswiperdata() {
+      this.swiperdata = await this.$https({
+        url: '/home/swiperdata'
+      })
     },
-    getnavList() {
-      // 导航图标
-      uni.request({
-        url: 'https://api-hmugo-web.itheima.net/api/public/v1/home/catitems',
-        success: (res) => {
-          // console.log(res.data)
-          this.navList = res.data.message
-        }
-      });
+    async getnavList() {
+      this.navList = await this.$https({
+        url: '/home/catitems'
+      })
+
     },
-    getfloorList() {
-      // 楼层
-      uni.request({
-        url: 'https://api-hmugo-web.itheima.net/api/public/v1/home/floordata',
-        success: (res) => {
-          console.log(res.data)
-          this.floorList = res.data.message
-        }
-      });
+    async getfloorList() {
+      this.floorList = await this.$https({
+        url: '/home/floordata'
+      })
     }
 
   }
