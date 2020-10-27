@@ -24,7 +24,10 @@
             <view class="box" v-if="item.children">
               <view v-for="(v, i) in item.children" :key="i" class="right_item">
                 <view class="right_item_image">
-                  <navigator url="">
+                  <navigator
+                    :url="'/pages/goods_list/main?cid=' + v.cat_id"
+                    hover-class="none"
+                  >
                     <image :src="v.cat_icon" mode="" />
                   </navigator>
                 </view>
@@ -39,7 +42,7 @@
 </template>
 
 <script>
-import searchBox from '@/components/search'
+import searchBox from '@/components/search/main'
 
 let categoriesAll = []
 export default {
@@ -55,16 +58,24 @@ export default {
     searchBox
   },
   onLoad() {
-    console.log(uni.getStorageSync('categoriesAll'));
+    // console.log(uni.getStorageSync('categoriesAll'));
     if (uni.getStorageSync('categoriesAll')) {
-      categoriesAll = uni.getStorageSync('categoriesAll');
-      this.categories_left_List = categoriesAll.map(item => {
-        return {
-          cat_id: item.cat_id,
-          cat_name: item.cat_name
-        }
-      });
-      this.categories_right_List = [...categoriesAll[0].children]
+      console.log(uni.getStorageSync('outtime') + 10 * 60 * 1000);
+      console.log(+new Date());
+      if (uni.getStorageSync('outtime') + 10 * 60 * 1000 < +new Date()) {
+        this.getcategoriesList()
+
+      } else {
+        categoriesAll = uni.getStorageSync('categoriesAll');
+        this.categories_left_List = categoriesAll.map(item => {
+          return {
+            cat_id: item.cat_id,
+            cat_name: item.cat_name
+          }
+        });
+        this.categories_right_List = [...categoriesAll[0].children]
+      }
+
     } else {
       this.getcategoriesList()
     }
@@ -84,15 +95,16 @@ export default {
       });
       this.categories_right_List = [...categoriesAll[0].children]
       uni.setStorageSync('categoriesAll', categoriesAll)
-      console.log(this.categories_left_List);
-      console.log(this.categories_right_List);
+      uni.setStorageSync('outtime', +new Date())
+      // console.log(this.categories_left_List);
+      // console.log(this.categories_right_List);
     },
 
     // 切换列表
     changindex(index) {
       this.activeIndex = index
       this.categories_right_List.length = []
-      console.log(categoriesAll);
+      // console.log(categoriesAll);
       setTimeout(() => {
         this.categories_right_List = [...categoriesAll[index].children]
       }, 50);
@@ -127,6 +139,7 @@ export default {
       }
       .active {
         color: #eb4450;
+        background-color: #fff;
         &::before {
           position: absolute;
           content: '';
@@ -154,7 +167,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding-top: 18rpx;
+      padding: 18rpx 0;
       &::before,
       &::after {
         content: '/';
@@ -165,6 +178,7 @@ export default {
     .box {
       display: flex;
       flex-wrap: wrap;
+      padding-bottom: 20rpx;
       .right_item {
         width: 33%;
         display: flex;

@@ -8,6 +8,60 @@
 			"style":{
 				"navigationBarTitleText":"商品分类"
 			}
+    },
+    {
+			"path": "pages/goods_list/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+		},
+    {
+			"path": "pages/goods_detail/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+		},
+    {
+			"path": "pages/collect/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+    },
+    {
+			"path": "pages/order/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+		},
+    {
+			"path": "pages/search/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+		},
+    {
+			"path": "pages/feedback/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+		},
+    {
+			"path": "pages/login/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+		},
+    {
+			"path": "pages/auth/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
+		},
+    {
+			"path": "pages/pay/main",
+			"style":{
+				"navigationBarTitleText":"商品列表"
+			}
 		},
 		{
 			"path": "pages/cart/main"

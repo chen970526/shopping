@@ -45,8 +45,9 @@
   </view>
 </template>
 
-<script>
-import searchBox from '@/components/search'
+<script> 
+import searchBox from '@/components/search/main'
+
 export default {
   data() {
     return {
