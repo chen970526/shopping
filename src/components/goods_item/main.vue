@@ -4,8 +4,8 @@
       class="goods_item"
       v-for="(item, index) in goodsList"
       :key="index"
-      url=""
-      hover-class="none"
+      :url="'/pages/goods_detail/main?goods_id=' + item.goods_id"
+      hover-class="none"  
     >
       <view class="goods_item_left"
         ><image :src="item.goods_small_logo || '/static/empty.png'" mode=""
@@ -25,10 +25,10 @@ export default {
   //   console.log(123);
   //   console.log(this.goodsList);
   // },
-  // mounted() {
-  //   console.log(123);
-  //   console.log(this.goodsList);
-  // }
+  mounted() {
+    // console.log(123);
+    console.log(this.goodsList);
+  }
 }
 </script>
 

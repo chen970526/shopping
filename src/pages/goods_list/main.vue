@@ -95,21 +95,6 @@ export default {
     },
     // 下拉刷新
     async initData(e) {
-      // console.log(e);
-      // console.log(window);
-      // console.log('刷新');
-      // console.dir(this.$refs.scroll.$el.getBoundingClientRect());
-      // console.log(this.isShow);
-      // console.log(this.$refs.scroll.$el);
-      // if (this.$refs.scroll.$el.getBoundingClientRect().top > 190) {
-      //#ifdef H5
-      // if (this.top > 5) {
-      //   this.isShow = true
-      //   console.log('跳过了执行');
-      //   this.isShow = false
-      //   return
-      // }
-      //#endif
       this.isShow = true
       this.keep = true
       this.pagenum = 1
@@ -120,16 +105,15 @@ export default {
         duration: 1000
       });
       // }
-      this.isShow = false
-      console.log(this.isShow);
+      this.isShow = false;
     },
 
     //#ifdef H5
     logtop(e) {
-      console.log(e.detail.scrollTop);
+      // console.log(e.detail.scrollTop);
       this.top = e.detail.scrollTop
       if (this.top > 50) {
-        console.log('关闭下拉刷新');
+        // console.log('关闭下拉刷新');
         this.H5isShow = false
       } else {
         this.H5isShow = true
