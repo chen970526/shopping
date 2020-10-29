@@ -2,8 +2,32 @@
   <view
     ><searchBox> <icon type="search" size="14" color="#ccc" />搜索 </searchBox>
     <TabsBox :TabsBoxData="TabsBoxData" />
-    <scroll-view class="goods_box" @scrolltolower="upgoodsListdata" scroll-y>
-      <GoodsItem :goodsList="goodsList" v-if="goodsList.length !== 0" />
+    <!-- #ifdef H5 -->
+    <scroll-view
+      class="goods_box"
+      @scrolltolower="upgoodsListdata"
+      scroll-y
+      :refresher-enabled="H5isShow"
+      :refresher-triggered="isShow"
+      @refresherrefresh="initData"
+      @scroll="logtop"
+    >
+    <!-- #endif -->
+    <!-- #ifdef MP-WEIXIN -->
+    <scroll-view
+      class="goods_box"
+      @scrolltolower="upgoodsListdata"
+      scroll-y
+      :refresher-enabled="true"
+      :refresher-triggered="isShow"
+      @refresherrefresh="initData"
+    >
+    <!-- #endif -->
+      <GoodsItem
+        :goodsList="goodsList"
+        v-if="goodsList.length !== 0"
+      />
+      <text class="tips" :class="{ active: !keep }">我也是有底线的。。。</text>
     </scroll-view>
   </view>
 </template>
@@ -24,7 +48,11 @@ export default {
       pagenum: 1,
       pagesize: 10,
       cid: '',
-      goodsList: []
+      goodsList: [],
+      keep: true,
+      H5isShow: true,
+      isShow: false,
+      top: 0
     }
   },
   components: {
@@ -33,13 +61,13 @@ export default {
     searchBox
   },
   onLoad(data) {
-    console.log(data.cid);
+    // console.log(data.cid);
     this.cid = data.cid
     this.getgoodsListData()
   },
   methods: {
     // 获取列表信息
-    getgoodsListData() {
+    async getgoodsListData() {
       this.$https({
         url: '/goods/search',
         params: {
@@ -49,14 +77,65 @@ export default {
         }
       }).then(res => {
         // console.log(res.goods);
+        if (res.goods.length < this.pagesize) { this.keep = false }
         this.goodsList.push(...res.goods)
       })
     },
+    // 上拉加载
     upgoodsListdata() {
-      // console.log(123);
-      this.pagenum++
-      this.getgoodsListData()
+      if (this.keep) {
+        this.pagenum++
+        this.getgoodsListData()
+      } else {
+        uni.showToast({
+          title: "没有数据了。。。",
+          duration: 2000
+        });
+      }
+    },
+    // 下拉刷新
+    async initData(e) {
+      // console.log(e);
+      // console.log(window);
+      // console.log('刷新');
+      // console.dir(this.$refs.scroll.$el.getBoundingClientRect());
+      // console.log(this.isShow);
+      // console.log(this.$refs.scroll.$el);
+      // if (this.$refs.scroll.$el.getBoundingClientRect().top > 190) {
+      //#ifdef H5
+      // if (this.top > 5) {
+      //   this.isShow = true
+      //   console.log('跳过了执行');
+      //   this.isShow = false
+      //   return
+      // }
+      //#endif
+      this.isShow = true
+      this.keep = true
+      this.pagenum = 1
+      this.goodsList.length = 0
+      await this.getgoodsListData()
+      uni.showToast({
+        title: "已更新。。。",
+        duration: 1000
+      });
+      // }
+      this.isShow = false
+      console.log(this.isShow);
+    },
+
+    //#ifdef H5
+    logtop(e) {
+      // console.log(e);
+      this.top = e.detail.scrollTop
+      if (this.top > 5) {
+        console.log('关闭下拉刷新');
+        this.H5isShow = false
+      } else {
+        this.H5isShow = true
+      }
     }
+    //#endif
   }
 }
 </script>
@@ -65,7 +144,17 @@ export default {
 .goods_box {
   height: calc(100vh - 100rpx - 80rpx);
   /* #ifdef H5 */
-  height: calc(100vh - 100rpx - 80rpx - 44rpx);
+  height: calc(100vh - 100rpx - 80rpx - 44px);
   /* endif */
+  .tips {
+    justify-content: center;
+    align-items: center;
+    height: 100rpx;
+    border-top: 1rpx dashed #ccc;
+    display: none;
+  }
+  .active {
+    display: flex;
+  }
 }
 </style>
