@@ -126,9 +126,9 @@ export default {
 
     //#ifdef H5
     logtop(e) {
-      // console.log(e);
+      console.log(e.detail.scrollTop);
       this.top = e.detail.scrollTop
-      if (this.top > 5) {
+      if (this.top > 50) {
         console.log('关闭下拉刷新');
         this.H5isShow = false
       } else {
