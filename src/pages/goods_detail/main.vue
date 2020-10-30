@@ -1,5 +1,10 @@
 <template>
   <view class="content">
+    <navigator
+      open-type="navigateBack"
+      hover-class="none"
+      class="back iconfont icon-arrow-down"
+    ></navigator>
     <view class="content_top">
       <swiper
         class="swiper_box"
@@ -13,15 +18,21 @@
           v-for="(item, index) in swiperList"
           :key="index"
         >
-          <image :src="item.pics_big" mode="heightFix" />
+          <image
+            @tap="lookBigImg(index)"
+            :src="item.pics_big"
+            mode="heightFix"
+          />
         </swiper-item>
       </swiper>
       <view class="goods_data">
         <view class="goods_data_top">
           <view class="price">{{ price }}</view>
           <view class="start">
-            <view>分享</view>
-            <view>收藏</view>
+            <view class="fenxiang iconfont icon-fenxiang">
+              <button class="btn" open-type="share">分享</button>
+            </view>
+            <view class="favorite iconfont icon-favorite"></view>
           </view>
         </view>
         <view class="goods_data_buttom">
@@ -33,9 +44,18 @@
       <rich-text :nodes="content"></rich-text>
     </view>
     <view class="car_box">
-      <view class="kefu iconfont icon-kefu">联系客服</view>
-      <view class="car iconfont icon-gouwuche">购物车</view>
-      <view class="addcar addcar_color">加入购物车</view>
+      <view class="kefu iconfont icon-kefu">
+        <button class="kefu_btn" open-type="contact">联系客服</button>
+        联系客服</view
+      >
+      <navigator
+        open-type="switchTab"
+        url="/pages/cart/main"
+        hover-class="none"
+        class="car iconfont icon-gouwuche"
+        >购物车</navigator
+      >
+      <view class="addcar addcar_color" @tap="addcartList">加入购物车</view>
       <view class="play play_color">立即购买</view>
     </view>
   </view>
@@ -59,6 +79,51 @@ export default {
     this.getGoodsDetail()
   },
   methods: {
+    // 加入购物车
+    addcartList() {
+      let cartList = uni.getStorageSync('cartList') || []
+      console.log(cartList);
+      console.log(this.goodsData.goods_id);
+      const index = cartList.findIndex(item => { return +item.goods_id === +this.goodsData.goods_id })
+      if (index !== -1) {
+        cartList[index].amount += 1
+      } else {
+        const addData = {
+          goods_id: this.goodsData.goods_id,
+          goods_name: this.goodsData.goods_name,
+          goods_price: this.goodsData.goods_price,
+          goods_small_logo: this.goodsData.goods_small_logo,
+          state: false,
+          amount: 1
+        }
+        cartList.push(addData)
+      }
+      uni.setStorageSync('cartList', cartList)
+      uni.showToast({
+        title: '添加成功',
+        duration: 1000,
+        mask: true
+      });
+    },
+    // 点击查看大图
+    lookBigImg(current) {
+
+      uni.previewImage({
+        urls: this.swiperList.map(item => {
+          return item.pics_big
+        }),
+        current,
+        longPressActions: {
+          itemList: ['发送给朋友', '保存图片', '收藏'],
+          success: function(data) {
+            console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+          },
+          fail: function(err) {
+            console.log(err.errMsg);
+          }
+        }
+      });
+    },
     // 获取商品详情
     getGoodsDetail() {
       this.$https({
@@ -94,6 +159,23 @@ export default {
 page {
   .content {
     background-color: #f9f9f9;
+    position: relative;
+    .back {
+      position: absolute;
+      top: 48rpx;
+      left: 25rpx;
+      width: 70rpx;
+      height: 70rpx;
+      border-radius: 35rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.2);
+      &::before {
+        color: #fff;
+        transform: rotate(90deg);
+      }
+    }
     .content_top {
       background-color: #fff;
       padding: 0 35rpx;
@@ -114,6 +196,23 @@ page {
           padding-bottom: 19rpx;
           .start {
             display: flex;
+            .fenxiang,
+            .favorite {
+              font-size: 44rpx;
+              padding-right: 20rpx;
+            }
+            .fenxiang {
+              position: relative;
+
+              .btn {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+              }
+            }
           }
         }
         .goods_data_buttom {
@@ -125,7 +224,8 @@ page {
     }
     .content_buttom {
       background-color: #fff;
-      height: 1000rpx;
+      margin-bottom: 100rpx;
+      font-size: 0;
     }
     .car_box {
       display: flex;
@@ -146,6 +246,18 @@ page {
         align-items: center;
         &::before {
           font-size: 40rpx;
+        }
+      }
+      .kefu {
+        position: relative;
+
+        .kefu_btn {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
         }
       }
 
